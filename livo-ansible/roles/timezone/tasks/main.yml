@@ -1,0 +1,5 @@
+- name: set the local time zone
+  command: "/bin/cp /usr/share/zoneinfo/{{ nqdo_server_timezone }} /etc/localtime"
+
+- name: set the content of the time zone file
+  copy: dest=/etc/timezone content="{{ nqdo_server_timezone }}"

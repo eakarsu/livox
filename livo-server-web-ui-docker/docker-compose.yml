@@ -1,0 +1,20 @@
+web:
+    build: .
+    links:
+        - server
+    ports:
+        - "8080:8080"
+        - "9091:9091"
+    volumes_from:
+        - server
+    volumes:
+        - config.properties:/var/opt/livod/config.properties:ro
+        - frameworkFiles/:/var/opt/livod/frameworkFiles/
+    environment:
+        - LIVO_SERVER_HOST=server
+server:
+    image: livomobile/server
+    ports:
+        - "2366:2366"
+    expose:
+        - "6667"

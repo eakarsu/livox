@@ -1,0 +1,23 @@
+- name: configure system basics
+  hosts: common
+  sudo: yes
+  roles:
+    - { role: apt, tags: ['system'] }
+    - { role: user, tags: ['system'] }
+    - { role: timezone, tags: ['system'] }
+
+- name: apply security measures
+  hosts: common
+  sudo: yes
+  roles:
+    - { role: ssh, tags: ['security'] }
+    - { role: shorewall, tags: ['security'] }
+    - { role: fail2ban, tags: ['security'] }
+
+- name: install services
+  hosts: demo
+  sudo: yes
+  roles:
+    - { role: livo-server, tags: ['services'] }
+    - { role: tomcat, tags: ['services'] }
+    - { role: livo-web-ui, tags: ['services'] }

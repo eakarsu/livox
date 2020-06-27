@@ -1,0 +1,231 @@
+/*
+ Theme Name: Trype
+ Author: CREATEBRILLIANCE - Media & Consulting
+ Author URI: http://www.createbrilliance.com
+ Version: 1.0
+ */
+
+
+/*
+ * 
+ * 
+ * 
+ * 	STYLES
+ * 
+ * 	DARK
+ * 
+ * 
+ */
+
+body{
+	color:#3A3F44;
+}
+
+section:not(#head){
+	background-color:#1C2428 !important;
+}
+ section:nth-child(2n+1):not(#head){
+	background-color:#151B1E !important;
+}
+
+ .hero h2{
+	color:#806F43 !important;
+}
+
+ section#shots-phone .hero h2{
+	color:#806F43 !important;
+}
+
+.top-nav-collapse{
+	background-color:#0B0F11;
+	border-bottom:none;
+}
+ nav .company{
+	color:#806F43;
+}
+.navbar-nav > li > a,.navbar-nav .dropdown-menu > li > a{
+	color:#806F43 !important;
+}
+ .top-nav-collapse .company{
+	color:#565C63 !important;
+}
+ .top-nav-collapse .navbar-nav > li > a, .top-nav-collapse .navbar-nav .dropdown-menu > li > a{
+	color:#565C63 !important;
+}
+
+ .nav a:hover .caret{
+	border-bottom-color:#a2afb3;
+	border-top-color: #a2afb3;
+}
+ .nav a .caret{
+	border-bottom-color: #806F43;
+    border-top-color: #806F43;
+}
+ .top-nav-collapse .caret {
+    border-bottom-color: #565C63 !important;
+    border-top-color: #565C63 !important;
+}
+ .top-nav-collapse .navbar-nav .dropdown-menu {
+	   background-color: #0B0F11 !important;
+       border-bottom: none !important;
+        -webkit-transition: background .5s ease-in-out,padding .5s ease-in-out;
+        -moz-transition: background .5s ease-in-out,padding .5s ease-in-out;
+        transition: background .5s ease-in-out,padding .5s ease-in-out;
+       
+}
+
+ .top-nav-collapse .navbar-toggle{
+	color: #565C63 !important;
+}
+
+/*
+ * second version with static-background
+ */
+
+ .navbar.static-background{
+	background-color: #0B0F11;
+	color:#565C63;
+}
+ .navbar.static-background .company{
+	color:#565C63;
+}
+ .navbar.static-background .navbar-nav > li > a,.navbar.static-background .navbar-nav .dropdown-menu > li > a {
+	color:#565C63;
+}
+
+ .navbar.static-background .navbar-nav .caret {
+    border-bottom-color:#806F43;
+    border-top-color:#806F43;
+}
+ .navbar.static-background .navbar-nav .dropdown-menu{
+	background:#0B0F11;
+}
+
+
+ .brand-color{
+	color:#806F43 !important;
+}
+ .brand-bg{
+	background-color:#27292E !important;
+}
+
+ a {
+	color: #806F43;
+}
+ a:hover, a:focus {
+	color: #a2afb3;
+}
+ a:focus {
+	outline: thin dotted #806F43;
+	outline-offset: -2px;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+	background-color: #2F3238;
+	border-color: #2F3238;
+	color: #806F43 !important;
+	opacity: 1;
+}
+
+ .icon-effect:after{
+	background:#806F43 ;
+}
+ .icon-effect{
+	box-shadow: 0 0 0 3px #806F43;
+}
+ .icon-effect:hover,
+ .info-box:hover .icon-effect {
+	color:  #806F43;
+}
+
+ #welcome{
+	border-top:none;
+}
+
+ .process-line{
+	border-top: 2px dashed #3A3F44;
+}
+
+
+/*sections*/
+
+ .svgcolor-light path {
+    fill:#1C2428;
+    stroke:#1C2428;
+    stroke-width:0;
+}
+ .svgcolor-dark path {
+    fill: #151B1E;
+    stroke: #151B1E;
+    stroke-width:0;
+}
+ #coding .background-side-full{
+	background: url("../img/github-dark.jpg") no-repeat scroll 100% 0% #E9E8E6;
+}
+ #contact input, #contact textarea {
+    background: none repeat scroll 0 0 #0B0F11;
+}
+
+
+ #newsletter{
+	color:#4D5158;
+}
+ #newsletter  input,
+#newsletter  textarea {
+	background: #14181A;
+}
+ #newsletter .input-group-addon{
+	background-color:#212426;
+}
+
+ footer{
+	background-color:#0B0F11;
+}
+
+ footer .social-icons a {
+	background:none !important;
+	color:#806F43;
+}
+
+ .team-container,  .recent-blog-container {
+	background:#1C2428;
+	color:#7D8288;
+}
+.recent-blog-container .body p{
+	color:#5F5F5F;
+}
+
+ .pricing{
+	background-color:#262F34;
+}
+
+/*modal*/
+ .mfp-bg{
+	background:#151B1E;
+}
+ .team-modal h3{
+	color:#806F43;
+}
+ .team-modal hr{
+	border-top:1px solid #0B0F11;
+}
+ .mfp-arrow{
+	color:#806F43;
+}
+ .mfp-close{
+	color:#806F43;
+}
+
+/*owl carousel*/
+ .owl-theme .owl-controls .owl-page span{
+	border:1px solid #545859;
+}
+#owl-carousel-magnify .owl-controls .owl-buttons div{
+	color:white;
+}
+
+
+.bgGreen{
+	background:#1C2428 !important;
+}
+}

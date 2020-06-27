@@ -1,0 +1,10 @@
+- name: install the shorewall firewall
+  apt: pkg=shorewall state=present
+
+- name: copy the firewall configuration files
+  copy: src=etc-shorewall/ dest=/etc/shorewall/ backup=yes
+
+- name: enable the startup of the shorewall firewall
+  lineinfile: "dest=/etc/default/shorewall regexp='^startup=0' line='startup=1' backup=yes"
+  notify:
+    - restart shorewall

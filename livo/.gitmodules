@@ -1,0 +1,21 @@
+[submodule "clients"]
+	path = clients
+	url = https://bitbucket.org/enobilisim/livo-clients.git
+[submodule "thrift/definitions"]
+	path = thrift/definitions
+	url = https://bitbucket.org/enobilisim/livo-thrift-definitions.git
+[submodule "plugins"]
+	path = plugins
+	url = https://bitbucket.org/enobilisim/livo-plugins.git
+[submodule "server"]
+	path = server
+	url = https://bitbucket.org/enobilisim/livo-server.git
+[submodule "site"]
+	path = site
+	url = https://bitbucket.org/enobilisim/livomobile.com.git
+[submodule "deployment/ansible"]
+	path = deployment/ansible
+	url = https://bitbucket.org/enobilisim/livo-ansible.git
+[submodule "deployment/docker"]
+	path = deployment/docker
+	url = https://bitbucket.org/enobilisim/livo-docker.git

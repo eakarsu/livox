@@ -1,0 +1,13 @@
+- name: add the administration user
+  user: "name={{ admin_user }} system=yes shell=/bin/bash password={{ admin_password }}"
+
+- name: add the administration public key(s) to the authorized keys file
+  authorized_key: user="{{ admin_user }}" key="{{ admin_key }}"
+  notify:
+    - restart ssh
+
+- name: add the admin user to the sudoers file
+  lineinfile: "dest=/etc/sudoers backup=yes insertafter='^root' line='{{ admin_user }}	ALL=(ALL) ALL'"
+
+- name: lock the root account
+  shell: /usr/bin/passwd -l root

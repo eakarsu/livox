@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+
+	<servlet>
+		<servlet-name>NewsletterServlet</servlet-name>
+		<servlet-class>com.livomobile.NewsletterServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NewsletterServlet</servlet-name>
+		<url-pattern>/newsletter</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ContactServlet</servlet-name>
+		<servlet-class>com.livomobile.ContactServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ContactServlet</servlet-name>
+		<url-pattern>/contact</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>DocumentationServlet</servlet-name>
+		<servlet-class>com.livomobile.DocumentationServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DocumentationServlet</servlet-name>
+		<url-pattern>/documentation</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+</web-app>

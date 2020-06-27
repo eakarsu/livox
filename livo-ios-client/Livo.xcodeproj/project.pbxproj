@@ -1,0 +1,786 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8A07A61F1B72D53F0004AD7E /* UpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A07A61E1B72D53F0004AD7E /* UpdateViewController.swift */; };
+		8A153FB01BD72ECE00F1BC45 /* ServiceObjectsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A153FAF1BD72ECE00F1BC45 /* ServiceObjectsPlugin.swift */; settings = {ASSET_TAGS = (); }; };
+		8A153FB21BD7D9CC00F1BC45 /* FileSystemHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A153FB11BD7D9CC00F1BC45 /* FileSystemHelper.swift */; settings = {ASSET_TAGS = (); }; };
+		8A1AC2641B64A36200D87632 /* SettingsHelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1AC2631B64A36200D87632 /* SettingsHelpViewController.swift */; };
+		8A1AC2661B64C94900D87632 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8A1AC2651B64C94900D87632 /* Settings.bundle */; };
+		8A1AC26B1B6557BF00D87632 /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8A1AC26A1B6557BF00D87632 /* Defaults.plist */; };
+		8A27586E1BB9F04000AE6AC0 /* authc.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A27586D1BB9F04000AE6AC0 /* authc.m */; };
+		8A2758701BB9F71F00AE6AC0 /* DeviceLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A27586F1BB9F71F00AE6AC0 /* DeviceLoginViewController.swift */; };
+		8A4F4D7E1B38D3D500664E5A /* analytic.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4F4D7B1B38D3D500664E5A /* analytic.m */; };
+		8A4F4D821B38D3E200664E5A /* file.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4F4D811B38D3E200664E5A /* file.m */; };
+		8A4F4D851B38D40200664E5A /* provision.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4F4D841B38D40200664E5A /* provision.m */; };
+		8A4F4D881B38D41D00664E5A /* serviceobj.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4F4D871B38D41D00664E5A /* serviceobj.m */; };
+		8A4F4D8B1B38D43100664E5A /* shared.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A4F4D8A1B38D43100664E5A /* shared.m */; };
+		8A4F4D8D1B38DC5A00664E5A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4F4D8C1B38DC5A00664E5A /* Constants.swift */; };
+		8A4F4D901B38E08500664E5A /* TweaksHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A4F4D8F1B38E08500664E5A /* TweaksHelper.swift */; };
+		8A5469911B7EBA350014145F /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5469901B7EBA350014145F /* MessageViewController.swift */; };
+		8A5469991B7F51820014145F /* SilentLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5469981B7F51820014145F /* SilentLoginViewController.swift */; };
+		8A5DF6071B98340A008114C6 /* CDVConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A5DF6041B98340A008114C6 /* CDVConnection.m */; };
+		8A5DF6081B98340A008114C6 /* CDVReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A5DF6061B98340A008114C6 /* CDVReachability.m */; };
+		8A5DF60E1B9834B0008114C6 /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A5DF60B1B9834B0008114C6 /* CDVSplashScreen.m */; };
+		8A5DF60F1B9834B0008114C6 /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A5DF60D1B9834B0008114C6 /* CDVViewController+SplashScreen.m */; };
+		8A5DF6151B9835EA008114C6 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 8A5DF6141B9835EA008114C6 /* config.xml */; };
+		8A64456C1B7D50C5005D1A25 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A64456B1B7D50C5005D1A25 /* CacheManager.swift */; };
+		8A64456E1B7D56CD005D1A25 /* ApplicationHelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A64456D1B7D56CD005D1A25 /* ApplicationHelpViewController.swift */; };
+		8A72AAB21B713623004A9CDE /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A72AAB11B713623004A9CDE /* Reachability.m */; };
+		8A72AAB41B713639004A9CDE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A72AAB31B713639004A9CDE /* SystemConfiguration.framework */; };
+		8A72AAB61B713B6B004A9CDE /* CrossFadeAnimatator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A72AAB51B713B6B004A9CDE /* CrossFadeAnimatator.swift */; };
+		8A79EE551B29A1370086A6DF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A79EE541B29A1370086A6DF /* AppDelegate.swift */; };
+		8A79EE581B29A1380086A6DF /* Livo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8A79EE561B29A1370086A6DF /* Livo.xcdatamodeld */; };
+		8A79EE5D1B29A1380086A6DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A79EE5B1B29A1380086A6DF /* Main.storyboard */; };
+		8A79EE5F1B29A1380086A6DF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A79EE5E1B29A1380086A6DF /* Images.xcassets */; };
+		8A79EE6E1B29A1380086A6DF /* LivoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A79EE6D1B29A1380086A6DF /* LivoTests.swift */; };
+		8A79EE7A1B29A5D80086A6DF /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A79EE791B29A5D80086A6DF /* RootViewController.swift */; };
+		8A96952E1B9776FC00C4819D /* ApplicationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A96952D1B9776FC00C4819D /* ApplicationViewController.swift */; };
+		8AA0FE241B5D3C9C00F036D3 /* CompanyLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0FE231B5D3C9C00F036D3 /* CompanyLoginViewController.swift */; };
+		8AA0FE261B5D3D2200F036D3 /* UserLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0FE251B5D3D2200F036D3 /* UserLoginViewController.swift */; };
+		8ABC5E271BBF51F3005ED5AB /* EventRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ABC5E261BBF51F3005ED5AB /* EventRecord.m */; };
+		8AE1B4221B6C08D600D1832D /* ServiceClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AE1B4211B6C08D600D1832D /* ServiceClient.m */; };
+		8AE1B4241B6C171800D1832D /* ServiceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AE1B4231B6C171800D1832D /* ServiceHelper.swift */; };
+		DE48C7953C5AA98DEF872472 /* Pods_Livo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 368309612322DED482C17E74 /* Pods_Livo.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8A79EE681B29A1380086A6DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8A79EE471B29A1370086A6DF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8A79EE4E1B29A1370086A6DF;
+			remoteInfo = Livo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		368309612322DED482C17E74 /* Pods_Livo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Livo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A07A61E1B72D53F0004AD7E /* UpdateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateViewController.swift; sourceTree = "<group>"; };
+		8A153FAF1BD72ECE00F1BC45 /* ServiceObjectsPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceObjectsPlugin.swift; sourceTree = "<group>"; };
+		8A153FB11BD7D9CC00F1BC45 /* FileSystemHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemHelper.swift; sourceTree = "<group>"; };
+		8A1AC2631B64A36200D87632 /* SettingsHelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsHelpViewController.swift; sourceTree = "<group>"; };
+		8A1AC2651B64C94900D87632 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		8A1AC26A1B6557BF00D87632 /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults.plist; sourceTree = "<group>"; };
+		8A27586C1BB9F04000AE6AC0 /* authc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = authc.h; sourceTree = "<group>"; };
+		8A27586D1BB9F04000AE6AC0 /* authc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = authc.m; sourceTree = "<group>"; };
+		8A27586F1BB9F71F00AE6AC0 /* DeviceLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceLoginViewController.swift; sourceTree = "<group>"; };
+		8A4F4D7A1B38D3D500664E5A /* analytic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = analytic.h; sourceTree = "<group>"; };
+		8A4F4D7B1B38D3D500664E5A /* analytic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = analytic.m; sourceTree = "<group>"; };
+		8A4F4D801B38D3E200664E5A /* file.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = file.h; sourceTree = "<group>"; };
+		8A4F4D811B38D3E200664E5A /* file.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = file.m; sourceTree = "<group>"; };
+		8A4F4D831B38D3F600664E5A /* provision.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = provision.h; sourceTree = "<group>"; };
+		8A4F4D841B38D40200664E5A /* provision.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = provision.m; sourceTree = "<group>"; };
+		8A4F4D861B38D41D00664E5A /* serviceobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serviceobj.h; sourceTree = "<group>"; };
+		8A4F4D871B38D41D00664E5A /* serviceobj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = serviceobj.m; sourceTree = "<group>"; };
+		8A4F4D891B38D42700664E5A /* shared.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shared.h; sourceTree = "<group>"; };
+		8A4F4D8A1B38D43100664E5A /* shared.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = shared.m; sourceTree = "<group>"; };
+		8A4F4D8C1B38DC5A00664E5A /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		8A4F4D8F1B38E08500664E5A /* TweaksHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweaksHelper.swift; sourceTree = "<group>"; };
+		8A5469901B7EBA350014145F /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
+		8A5469981B7F51820014145F /* SilentLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SilentLoginViewController.swift; sourceTree = "<group>"; };
+		8A5DF6031B98340A008114C6 /* CDVConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVConnection.h; sourceTree = "<group>"; };
+		8A5DF6041B98340A008114C6 /* CDVConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVConnection.m; sourceTree = "<group>"; };
+		8A5DF6051B98340A008114C6 /* CDVReachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVReachability.h; sourceTree = "<group>"; };
+		8A5DF6061B98340A008114C6 /* CDVReachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVReachability.m; sourceTree = "<group>"; };
+		8A5DF60A1B9834B0008114C6 /* CDVSplashScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDVSplashScreen.h; sourceTree = "<group>"; };
+		8A5DF60B1B9834B0008114C6 /* CDVSplashScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDVSplashScreen.m; sourceTree = "<group>"; };
+		8A5DF60C1B9834B0008114C6 /* CDVViewController+SplashScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CDVViewController+SplashScreen.h"; sourceTree = "<group>"; };
+		8A5DF60D1B9834B0008114C6 /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CDVViewController+SplashScreen.m"; sourceTree = "<group>"; };
+		8A5DF6141B9835EA008114C6 /* config.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
+		8A64456B1B7D50C5005D1A25 /* CacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		8A64456D1B7D56CD005D1A25 /* ApplicationHelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationHelpViewController.swift; sourceTree = "<group>"; };
+		8A72AAB01B713623004A9CDE /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		8A72AAB11B713623004A9CDE /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		8A72AAB31B713639004A9CDE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		8A72AAB51B713B6B004A9CDE /* CrossFadeAnimatator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrossFadeAnimatator.swift; sourceTree = "<group>"; };
+		8A79EE4F1B29A1370086A6DF /* Livo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Livo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A79EE531B29A1370086A6DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8A79EE541B29A1370086A6DF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8A79EE571B29A1370086A6DF /* Livo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Livo.xcdatamodel; sourceTree = "<group>"; };
+		8A79EE5C1B29A1380086A6DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8A79EE5E1B29A1380086A6DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		8A79EE671B29A1380086A6DF /* LivoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LivoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A79EE6C1B29A1380086A6DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8A79EE6D1B29A1380086A6DF /* LivoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivoTests.swift; sourceTree = "<group>"; };
+		8A79EE791B29A5D80086A6DF /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RootViewController.swift; path = "View Controllers/RootViewController.swift"; sourceTree = "<group>"; };
+		8A96952D1B9776FC00C4819D /* ApplicationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationViewController.swift; sourceTree = "<group>"; };
+		8AA0FE231B5D3C9C00F036D3 /* CompanyLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompanyLoginViewController.swift; sourceTree = "<group>"; };
+		8AA0FE251B5D3D2200F036D3 /* UserLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserLoginViewController.swift; sourceTree = "<group>"; };
+		8ABC5E251BBF51F3005ED5AB /* EventRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventRecord.h; sourceTree = "<group>"; };
+		8ABC5E261BBF51F3005ED5AB /* EventRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventRecord.m; sourceTree = "<group>"; };
+		8AE1B4201B6C08D600D1832D /* ServiceClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceClient.h; sourceTree = "<group>"; };
+		8AE1B4211B6C08D600D1832D /* ServiceClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceClient.m; sourceTree = "<group>"; };
+		8AE1B4231B6C171800D1832D /* ServiceHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceHelper.swift; sourceTree = "<group>"; };
+		8AFDB5001B2BC1380045D9FD /* Livo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Livo-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		CE404606C8FE4484F07EC682 /* Pods-Livo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Livo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Livo/Pods-Livo.debug.xcconfig"; sourceTree = "<group>"; };
+		F673428F3CC767B7920DF5B8 /* Pods-Livo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Livo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Livo/Pods-Livo.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8A79EE4C1B29A1370086A6DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A72AAB41B713639004A9CDE /* SystemConfiguration.framework in Frameworks */,
+				DE48C7953C5AA98DEF872472 /* Pods_Livo.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A79EE641B29A1380086A6DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8A4F4D6D1B38D28800664E5A /* Thrift */ = {
+			isa = PBXGroup;
+			children = (
+				8A27586C1BB9F04000AE6AC0 /* authc.h */,
+				8A27586D1BB9F04000AE6AC0 /* authc.m */,
+				8A4F4D891B38D42700664E5A /* shared.h */,
+				8A4F4D8A1B38D43100664E5A /* shared.m */,
+				8A4F4D861B38D41D00664E5A /* serviceobj.h */,
+				8A4F4D871B38D41D00664E5A /* serviceobj.m */,
+				8A4F4D841B38D40200664E5A /* provision.m */,
+				8A4F4D831B38D3F600664E5A /* provision.h */,
+				8A4F4D801B38D3E200664E5A /* file.h */,
+				8A4F4D811B38D3E200664E5A /* file.m */,
+				8A4F4D7A1B38D3D500664E5A /* analytic.h */,
+				8A4F4D7B1B38D3D500664E5A /* analytic.m */,
+			);
+			name = Thrift;
+			sourceTree = "<group>";
+		};
+		8A4F4D8E1B38E06900664E5A /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				8A4F4D8F1B38E08500664E5A /* TweaksHelper.swift */,
+				8AE1B4231B6C171800D1832D /* ServiceHelper.swift */,
+				8A64456B1B7D50C5005D1A25 /* CacheManager.swift */,
+				8A153FB11BD7D9CC00F1BC45 /* FileSystemHelper.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
+		8A5DF5FC1B983228008114C6 /* Cordova */ = {
+			isa = PBXGroup;
+			children = (
+				8A5DF6141B9835EA008114C6 /* config.xml */,
+				8A5DF5FD1B983230008114C6 /* Plugins */,
+			);
+			name = Cordova;
+			sourceTree = "<group>";
+		};
+		8A5DF5FD1B983230008114C6 /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				8A5DF6101B983583008114C6 /* ServiceObjects */,
+				8A5DF6091B983486008114C6 /* Splash Screen */,
+				8A5DF6021B9833EE008114C6 /* Network Information */,
+			);
+			name = Plugins;
+			sourceTree = "<group>";
+		};
+		8A5DF6021B9833EE008114C6 /* Network Information */ = {
+			isa = PBXGroup;
+			children = (
+				8A5DF6031B98340A008114C6 /* CDVConnection.h */,
+				8A5DF6041B98340A008114C6 /* CDVConnection.m */,
+				8A5DF6051B98340A008114C6 /* CDVReachability.h */,
+				8A5DF6061B98340A008114C6 /* CDVReachability.m */,
+			);
+			name = "Network Information";
+			sourceTree = "<group>";
+		};
+		8A5DF6091B983486008114C6 /* Splash Screen */ = {
+			isa = PBXGroup;
+			children = (
+				8A5DF60A1B9834B0008114C6 /* CDVSplashScreen.h */,
+				8A5DF60B1B9834B0008114C6 /* CDVSplashScreen.m */,
+				8A5DF60C1B9834B0008114C6 /* CDVViewController+SplashScreen.h */,
+				8A5DF60D1B9834B0008114C6 /* CDVViewController+SplashScreen.m */,
+			);
+			name = "Splash Screen";
+			sourceTree = "<group>";
+		};
+		8A5DF6101B983583008114C6 /* ServiceObjects */ = {
+			isa = PBXGroup;
+			children = (
+				8A153FAF1BD72ECE00F1BC45 /* ServiceObjectsPlugin.swift */,
+			);
+			name = ServiceObjects;
+			sourceTree = "<group>";
+		};
+		8A72AAAF1B713609004A9CDE /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				8A72AAB01B713623004A9CDE /* Reachability.h */,
+				8A72AAB11B713623004A9CDE /* Reachability.m */,
+			);
+			name = Reachability;
+			sourceTree = "<group>";
+		};
+		8A72AAB71B713B72004A9CDE /* Animators */ = {
+			isa = PBXGroup;
+			children = (
+				8A72AAB51B713B6B004A9CDE /* CrossFadeAnimatator.swift */,
+			);
+			name = Animators;
+			sourceTree = "<group>";
+		};
+		8A79EE461B29A1370086A6DF = {
+			isa = PBXGroup;
+			children = (
+				8A79EE511B29A1370086A6DF /* Livo */,
+				8A79EE6A1B29A1380086A6DF /* LivoTests */,
+				8A79EE501B29A1370086A6DF /* Products */,
+				AD96927BA704D458CD99D1C4 /* Pods */,
+				A6CA0EF8F85A76667F3D7B3B /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		8A79EE501B29A1370086A6DF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8A79EE4F1B29A1370086A6DF /* Livo.app */,
+				8A79EE671B29A1380086A6DF /* LivoTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8A79EE511B29A1370086A6DF /* Livo */ = {
+			isa = PBXGroup;
+			children = (
+				8A79EE541B29A1370086A6DF /* AppDelegate.swift */,
+				8A4F4D8C1B38DC5A00664E5A /* Constants.swift */,
+				8A79EE5B1B29A1380086A6DF /* Main.storyboard */,
+				8A79EE5E1B29A1380086A6DF /* Images.xcassets */,
+				8A79EE561B29A1370086A6DF /* Livo.xcdatamodeld */,
+				8A8A502D1BBCB20E00E74257 /* Models */,
+				8A72AAB71B713B72004A9CDE /* Animators */,
+				8A4F4D8E1B38E06900664E5A /* Helpers */,
+				8A79EE7B1B29A5DF0086A6DF /* Controllers */,
+				8A79EE521B29A1370086A6DF /* Supporting Files */,
+			);
+			path = Livo;
+			sourceTree = "<group>";
+		};
+		8A79EE521B29A1370086A6DF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8A5DF5FC1B983228008114C6 /* Cordova */,
+				8A1AC2651B64C94900D87632 /* Settings.bundle */,
+				8AE1B41F1B6C08BF00D1832D /* Client */,
+				8A4F4D6D1B38D28800664E5A /* Thrift */,
+				8A72AAAF1B713609004A9CDE /* Reachability */,
+				8AFDB5001B2BC1380045D9FD /* Livo-Bridging-Header.h */,
+				8A79EE531B29A1370086A6DF /* Info.plist */,
+				8A1AC26A1B6557BF00D87632 /* Defaults.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8A79EE6A1B29A1380086A6DF /* LivoTests */ = {
+			isa = PBXGroup;
+			children = (
+				8A79EE6D1B29A1380086A6DF /* LivoTests.swift */,
+				8A79EE6B1B29A1380086A6DF /* Supporting Files */,
+			);
+			path = LivoTests;
+			sourceTree = "<group>";
+		};
+		8A79EE6B1B29A1380086A6DF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8A79EE6C1B29A1380086A6DF /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8A79EE7B1B29A5DF0086A6DF /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				8A96952D1B9776FC00C4819D /* ApplicationViewController.swift */,
+				8AA0FE231B5D3C9C00F036D3 /* CompanyLoginViewController.swift */,
+				8AA0FE251B5D3D2200F036D3 /* UserLoginViewController.swift */,
+				8A27586F1BB9F71F00AE6AC0 /* DeviceLoginViewController.swift */,
+				8A1AC2631B64A36200D87632 /* SettingsHelpViewController.swift */,
+				8A07A61E1B72D53F0004AD7E /* UpdateViewController.swift */,
+				8A64456D1B7D56CD005D1A25 /* ApplicationHelpViewController.swift */,
+				8A5469901B7EBA350014145F /* MessageViewController.swift */,
+				8A5469981B7F51820014145F /* SilentLoginViewController.swift */,
+				8A79EE791B29A5D80086A6DF /* RootViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		8A8A502D1BBCB20E00E74257 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8ABC5E251BBF51F3005ED5AB /* EventRecord.h */,
+				8ABC5E261BBF51F3005ED5AB /* EventRecord.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		8AE1B41F1B6C08BF00D1832D /* Client */ = {
+			isa = PBXGroup;
+			children = (
+				8AE1B4201B6C08D600D1832D /* ServiceClient.h */,
+				8AE1B4211B6C08D600D1832D /* ServiceClient.m */,
+			);
+			name = Client;
+			sourceTree = "<group>";
+		};
+		A6CA0EF8F85A76667F3D7B3B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8A72AAB31B713639004A9CDE /* SystemConfiguration.framework */,
+				368309612322DED482C17E74 /* Pods_Livo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AD96927BA704D458CD99D1C4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CE404606C8FE4484F07EC682 /* Pods-Livo.debug.xcconfig */,
+				F673428F3CC767B7920DF5B8 /* Pods-Livo.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8A79EE4E1B29A1370086A6DF /* Livo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A79EE711B29A1380086A6DF /* Build configuration list for PBXNativeTarget "Livo" */;
+			buildPhases = (
+				D80CE07D924711B2966E82A1 /* Check Pods Manifest.lock */,
+				8A79EE4B1B29A1370086A6DF /* Sources */,
+				8A79EE4C1B29A1370086A6DF /* Frameworks */,
+				8A79EE4D1B29A1370086A6DF /* Resources */,
+				0552D8926808C54E5058E050 /* Embed Pods Frameworks */,
+				FF81BC46C9AA9C408CD1BC55 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Livo;
+			productName = Livo;
+			productReference = 8A79EE4F1B29A1370086A6DF /* Livo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8A79EE661B29A1380086A6DF /* LivoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A79EE741B29A1380086A6DF /* Build configuration list for PBXNativeTarget "LivoTests" */;
+			buildPhases = (
+				8A79EE631B29A1380086A6DF /* Sources */,
+				8A79EE641B29A1380086A6DF /* Frameworks */,
+				8A79EE651B29A1380086A6DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8A79EE691B29A1380086A6DF /* PBXTargetDependency */,
+			);
+			name = LivoTests;
+			productName = LivoTests;
+			productReference = 8A79EE671B29A1380086A6DF /* LivoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8A79EE471B29A1370086A6DF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "Livo Mobile";
+				TargetAttributes = {
+					8A79EE4E1B29A1370086A6DF = {
+						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = 8V6Z5R63FP;
+					};
+					8A79EE661B29A1380086A6DF = {
+						CreatedOnToolsVersion = 6.3.2;
+						TestTargetID = 8A79EE4E1B29A1370086A6DF;
+					};
+				};
+			};
+			buildConfigurationList = 8A79EE4A1B29A1370086A6DF /* Build configuration list for PBXProject "Livo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8A79EE461B29A1370086A6DF;
+			productRefGroup = 8A79EE501B29A1370086A6DF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8A79EE4E1B29A1370086A6DF /* Livo */,
+				8A79EE661B29A1380086A6DF /* LivoTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8A79EE4D1B29A1370086A6DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A1AC26B1B6557BF00D87632 /* Defaults.plist in Resources */,
+				8A79EE5D1B29A1380086A6DF /* Main.storyboard in Resources */,
+				8A1AC2661B64C94900D87632 /* Settings.bundle in Resources */,
+				8A79EE5F1B29A1380086A6DF /* Images.xcassets in Resources */,
+				8A5DF6151B9835EA008114C6 /* config.xml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A79EE651B29A1380086A6DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0552D8926808C54E5058E050 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Livo/Pods-Livo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D80CE07D924711B2966E82A1 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		FF81BC46C9AA9C408CD1BC55 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Livo/Pods-Livo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8A79EE4B1B29A1370086A6DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AA0FE241B5D3C9C00F036D3 /* CompanyLoginViewController.swift in Sources */,
+				8A4F4D8D1B38DC5A00664E5A /* Constants.swift in Sources */,
+				8A4F4D821B38D3E200664E5A /* file.m in Sources */,
+				8A79EE551B29A1370086A6DF /* AppDelegate.swift in Sources */,
+				8A4F4D7E1B38D3D500664E5A /* analytic.m in Sources */,
+				8A5DF6081B98340A008114C6 /* CDVReachability.m in Sources */,
+				8AA0FE261B5D3D2200F036D3 /* UserLoginViewController.swift in Sources */,
+				8A1AC2641B64A36200D87632 /* SettingsHelpViewController.swift in Sources */,
+				8A4F4D901B38E08500664E5A /* TweaksHelper.swift in Sources */,
+				8A5DF60F1B9834B0008114C6 /* CDVViewController+SplashScreen.m in Sources */,
+				8A5DF60E1B9834B0008114C6 /* CDVSplashScreen.m in Sources */,
+				8A79EE581B29A1380086A6DF /* Livo.xcdatamodeld in Sources */,
+				8A5DF6071B98340A008114C6 /* CDVConnection.m in Sources */,
+				8ABC5E271BBF51F3005ED5AB /* EventRecord.m in Sources */,
+				8A27586E1BB9F04000AE6AC0 /* authc.m in Sources */,
+				8A07A61F1B72D53F0004AD7E /* UpdateViewController.swift in Sources */,
+				8A4F4D8B1B38D43100664E5A /* shared.m in Sources */,
+				8A64456E1B7D56CD005D1A25 /* ApplicationHelpViewController.swift in Sources */,
+				8A79EE7A1B29A5D80086A6DF /* RootViewController.swift in Sources */,
+				8A2758701BB9F71F00AE6AC0 /* DeviceLoginViewController.swift in Sources */,
+				8A64456C1B7D50C5005D1A25 /* CacheManager.swift in Sources */,
+				8A4F4D851B38D40200664E5A /* provision.m in Sources */,
+				8A5469911B7EBA350014145F /* MessageViewController.swift in Sources */,
+				8A5469991B7F51820014145F /* SilentLoginViewController.swift in Sources */,
+				8AE1B4221B6C08D600D1832D /* ServiceClient.m in Sources */,
+				8A96952E1B9776FC00C4819D /* ApplicationViewController.swift in Sources */,
+				8A153FB21BD7D9CC00F1BC45 /* FileSystemHelper.swift in Sources */,
+				8A4F4D881B38D41D00664E5A /* serviceobj.m in Sources */,
+				8AE1B4241B6C171800D1832D /* ServiceHelper.swift in Sources */,
+				8A72AAB61B713B6B004A9CDE /* CrossFadeAnimatator.swift in Sources */,
+				8A72AAB21B713623004A9CDE /* Reachability.m in Sources */,
+				8A153FB01BD72ECE00F1BC45 /* ServiceObjectsPlugin.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A79EE631B29A1380086A6DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A79EE6E1B29A1380086A6DF /* LivoTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8A79EE691B29A1380086A6DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8A79EE4E1B29A1370086A6DF /* Livo */;
+			targetProxy = 8A79EE681B29A1380086A6DF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		8A79EE5B1B29A1380086A6DF /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8A79EE5C1B29A1380086A6DF /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		8A79EE6F1B29A1380086A6DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8A79EE701B29A1380086A6DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8A79EE721B29A1380086A6DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE404606C8FE4484F07EC682 /* Pods-Livo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = Livo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				"OTHER_SWIFT_FLAGS[arch=*]" = "-DDEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.livomobile.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Livo-Bridging-Header.h";
+			};
+			name = Debug;
+		};
+		8A79EE731B29A1380086A6DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F673428F3CC767B7920DF5B8 /* Pods-Livo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = Livo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.livomobile.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Livo-Bridging-Header.h";
+			};
+			name = Release;
+		};
+		8A79EE751B29A1380086A6DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = LivoTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.livomobile.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Livo.app/Livo";
+			};
+			name = Debug;
+		};
+		8A79EE761B29A1380086A6DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = LivoTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.livomobile.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Livo.app/Livo";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8A79EE4A1B29A1370086A6DF /* Build configuration list for PBXProject "Livo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A79EE6F1B29A1380086A6DF /* Debug */,
+				8A79EE701B29A1380086A6DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8A79EE711B29A1380086A6DF /* Build configuration list for PBXNativeTarget "Livo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A79EE721B29A1380086A6DF /* Debug */,
+				8A79EE731B29A1380086A6DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8A79EE741B29A1380086A6DF /* Build configuration list for PBXNativeTarget "LivoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A79EE751B29A1380086A6DF /* Debug */,
+				8A79EE761B29A1380086A6DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		8A79EE561B29A1370086A6DF /* Livo.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				8A79EE571B29A1370086A6DF /* Livo.xcdatamodel */,
+			);
+			currentVersion = 8A79EE571B29A1370086A6DF /* Livo.xcdatamodel */;
+			path = Livo.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 8A79EE471B29A1370086A6DF /* Project object */;
+}

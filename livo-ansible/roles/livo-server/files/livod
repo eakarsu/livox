@@ -1,0 +1,49 @@
+#! /usr/bin/python
+# /etc/init.d/livod
+#
+
+import os
+import sys
+
+from subprocess import Popen, call
+
+if len(sys.argv) <= 1:
+	print "/etc/init.d/livod (start|stop|restart|status)"
+	sys.exit(0)
+
+command = sys.argv[1]
+
+if os.environ['AEON_HOME'] == nil:
+	os.environ['AEON_HOME'] = '/var/opt/livod'
+
+if command == "start":
+	start_server()
+elif command == "stop":
+	stop_server()
+elif command == "restart":
+	stop_server()
+	start_server()
+elif command == "status":
+	check_status()
+else:
+	print "/etc/init.d/livod (start|stop|restart|status)"
+
+def start_server():
+	print "Starting Livo server..."
+	args = ['/usr/bin/java', '-Dcom.sun.management.jmxremote=true', '-Dcom.sun.management.jmxremote.port=6667', '-Dcom.sun.management.jmxremote.authenticate=false', '-Dcom.sun.management.jmxremote.ssl=false', '-Dorg.slf4j.simpleLogger.logFile=/var/log/livod.log', '-Dorg.slf4j.simpleLogger.defaultLogLevel=debug', '-jar', 'bin/felix.jar']
+	proc = Popen(args, cwd='/srv/livod/')
+	f = open('/var/opt/livod/livod.pid', mode='w+')
+	f.write(str(proc.pid))
+	f.close()
+def stop_server():
+	print "Stopping Livo server..."
+	f = open('/var/opt/livod/livod.pid')
+	pid = f.read()
+	f.close()
+	call(['/bin/kill', str(pid)])
+	os.remove('/var/opt/livod/livod.pid')
+def check_status():
+	if os.path.exists('/var/opt/livod/livod.pid'):
+		print "Livo server is running..."
+	else:
+		print "Livo server is not running..."

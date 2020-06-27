@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="tr.com.eno.aeon.plugin.authc"
+    version="1.0.0">
+    <name>AEON.Authentication</name>
+    <description>AEON Authentication Plugin</description>
+    <keywords>cordova,camera</keywords>
+
+    <js-module src="www/AEON.Authentication.js" name="AEON.Authentication">
+        <clobbers target="AEON.Authentication" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="AEON.Authentication">
+                <param name="android-package" value="tr.com.eno.aeon.plugin.authc.AuthenticationHandler"/>
+            </feature>
+        </config-file>
+
+        <source-file src="src/android/AuthenticationHandler.java" target-dir="src/tr/com/eno/aeon/plugin/authc/" />
+
+     </platform>
+
+     <!-- ios -->
+     <platform name="ios">
+         <config-file target="config.xml" parent="/*">
+             <feature name="AEON.Authentication">
+                 <param name="ios-package" value="AEAuthenticationHandler" />
+             </feature>
+         </config-file>
+
+         <header-file src="src/ios/AEAuthenticationHandler.h" />
+         <source-file src="src/ios/AEAuthenticationHandler.m" />
+     </platform>
+
+</plugin>

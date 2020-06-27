@@ -1,0 +1,6 @@
+[submodule "platforms/ios"]
+	path = platforms/ios
+	url = https://bitbucket.org/enobilisim/livo-ios-client.git
+[submodule "platforms/android"]
+	path = platforms/android
+	url = https://bitbucket.org/enobilisim/livo-android-client.git

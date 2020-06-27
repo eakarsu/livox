@@ -1,0 +1,21 @@
+# Uncomment this line to define a global platform for your project
+# platform :ios, '6.0'
+
+target 'Livo' do
+
+pod 'Tweaks', '~> 2.0'
+pod 'Shimmer', '~> 1.0'
+pod 'pop', '~> 1.0'
+pod 'thrift', '~> 0.9.2'
+pod 'SSKeychain', '~> 1.2.3'
+pod 'LogKit', '~> 2.0'
+pod 'Cordova', '~> 3.8'
+
+use_frameworks!
+
+end
+
+target 'LivoTests' do
+
+end
+

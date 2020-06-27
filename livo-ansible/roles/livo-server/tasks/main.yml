@@ -1,0 +1,15 @@
+- name: install Java 7 runtime
+  package: name=openjdk-7-jre-headless state=present
+
+- name: copy the Livo server distribution
+  unarchive: src=distribution-server.zip dest=/srv/livod/ copy=yes
+
+- name: copy the init.d script
+  copy: src=livod dest=/etc/init.d/livod mode=0755
+
+- name: set the AEON_HOME environment variable
+  lineinfile: dest=/etc/environment line="AEON_HOME=/var/opt/livod"
+
+- name: start the server
+  service: name=livod state=restarted
+

@@ -1,0 +1,28 @@
+PODS:
+  - Cordova (3.8.0)
+  - LogKit (2.0.2)
+  - pop (1.0.7)
+  - Shimmer (1.0.2)
+  - SSKeychain (1.2.3)
+  - thrift (0.9.2)
+  - Tweaks (2.0.0)
+
+DEPENDENCIES:
+  - Cordova (~> 3.8)
+  - LogKit (~> 2.0)
+  - pop (~> 1.0)
+  - Shimmer (~> 1.0)
+  - SSKeychain (~> 1.2.3)
+  - thrift (~> 0.9.2)
+  - Tweaks (~> 2.0)
+
+SPEC CHECKSUMS:
+  Cordova: 41554048698d50e70387ca2ab5bbdd1286fd0e39
+  LogKit: 1fe2712f71b3384f111ed4d88f053779c39cd837
+  pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
+  Shimmer: c5374be1c2b0c9e292fb05b339a513cf291cac86
+  SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
+  thrift: 54db2dc6b2918a6d38a866232e329e925471ddd6
+  Tweaks: 524fa47636cce3bf3a4d9156e980f10ae9480e81
+
+COCOAPODS: 0.39.0

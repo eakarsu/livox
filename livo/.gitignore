@@ -1,0 +1,3 @@
+.DS_Store
+/server/aeon-thrift-server/target/
+/server/aeon-authc-spi/target/

@@ -1,0 +1,8 @@
+- name: update the package index if last update is more than 3600 seconds (1 hr) ago
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: upgrade all packages to the latest version
+  apt: upgrade=dist
+
+- name: register a cron job for periodic package index update and package upgrades
+  cron: name="periodic package index update & package upgrade" special_time=hourly state=present job="apt-get -qqy update && apt-get -qqy upgrade && apt-get -qqy autoremove"

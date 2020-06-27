@@ -1,0 +1,43 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "res/xml/config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Livo.ServiceObjects\"><param name=\"android-package\" value=\"tr.com.eno.livo.plugin.serviceobjects.ServiceObjectsHandler\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"StatusBar\"><param name=\"android-package\" value=\"org.apache.cordova.statusbar.StatusBar\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "AndroidManifest.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "tr.com.livo.plugin.serviceobjects": {
+            "PACKAGE_NAME": "tr.com.eno.livo"
+        },
+        "org.apache.cordova.statusbar": {
+            "PACKAGE_NAME": "tr.com.eno.livo"
+        }
+    },
+    "dependent_plugins": {}
+}

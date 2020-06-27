@@ -1,0 +1,3 @@
+[submodule "aeon-plugin-authc"]
+	path = aeon-plugin-authc
+	url = https://bitbucket.org/enobilisim/aeon-authentication-plugin.git

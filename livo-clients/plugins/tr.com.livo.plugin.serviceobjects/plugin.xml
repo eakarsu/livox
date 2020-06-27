@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="tr.com.livo.plugin.serviceobjects" version="1.0.0">
+
+  <name>Livo ServiceObjects</name>
+  <description>Livo plugin for interacting with ServiceObjects.</description>
+  <keywords>livo,serviceobjects,service</keywords>
+
+  <js-module src="www/Livo_ServiceObjects.js" name="Livo_ServiceObjects">
+    <clobbers target="Livo.ServiceObjects" />
+  </js-module>
+
+  <platform name="ios">
+    <config-file target="config.xml" parent="/*">
+      <feature name="Livo.ServiceObjects">
+        <param name="ios-package" value="ServiceObjectsHandler" />
+      </feature>
+    </config-file>
+
+    <header-file src="src/ios/ServiceObjectsHandler.h" />
+    <source-file src="src/ios/ServiceObjectsHandler.m" />
+  </platform>
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="Livo.ServiceObjects">
+        <param name="android-package" value="tr.com.eno.livo.plugin.serviceobjects.ServiceObjectsHandler" />
+      </feature>
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/*">
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    </config-file>
+
+    <source-file src="src/android/ServiceObjectsHandler.java" target-dir="src/tr/com/eno/livo/plugin/serviceobjects" />
+  </platform>
+
+</plugin>

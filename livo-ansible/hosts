@@ -1,0 +1,8 @@
+[localhost]
+localhost ansible_connection=local
+
+[demo]
+54.187.197.160
+
+[common]
+demo

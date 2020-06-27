@@ -1,0 +1,13 @@
+**.class
+**/.settings
+**/bin
+.metadata
+**/target
+**/.classpath
+**/.project
+**/nbactions.xml
+**/test-output/
+.idea
+**/*.iml
+**/*.orig
+**/dependency-reduced-pom.xml
