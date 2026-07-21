@@ -57,15 +57,14 @@ public class FileTransferServiceProcessor extends
 
 	private static class AsyncIfaceImpl implements Iface {
 
+		private static final int MAX_TRACKED_SESSION_ROUTES = 4096;
 		private final Map<String, FileTransferService> fileTransferServices;
-		private final Map<String, String> sessionInitiatedFileTransferServices; // sessionID
-																				// ->
-																				// serviceName
+		private final SessionRouteRegistry sessionRoutes;
 
 		public AsyncIfaceImpl() {
 
 			this.fileTransferServices = new HashMap<String, FileTransferService>();
-			this.sessionInitiatedFileTransferServices = new HashMap<String, String>();
+			this.sessionRoutes = new SessionRouteRegistry(MAX_TRACKED_SESSION_ROUTES);
 		}
 
 		@Override
@@ -73,11 +72,7 @@ public class FileTransferServiceProcessor extends
 
 			// Find the name of the service that initiated this session
 			String serviceName;
-			synchronized (this.sessionInitiatedFileTransferServices) {
-
-				serviceName = this.sessionInitiatedFileTransferServices
-						.get(session.getId());
-			}
+			serviceName = this.sessionRoutes.get(session.getId());
 
 			// Sanity check
 			if (serviceName == null) {
@@ -98,6 +93,7 @@ public class FileTransferServiceProcessor extends
 
 				// Sanity check for the service
 				if (service == null) {
+					this.sessionRoutes.remove(session.getId());
 
 					LOGGER.warn(
 							"Failed to find a file transfer service with the name \"{}\", ignoring the destroy request...",
@@ -118,6 +114,9 @@ public class FileTransferServiceProcessor extends
 							"Encountered an unexpected exception while trying to destroy the session with the ID \"{}\", ignoring the destroy request...",
 							session.getId());
 					LOGGER.debug("Encountered exception: {}", e);
+				} finally {
+
+					this.sessionRoutes.remove(session.getId());
 				}
 			}
 		}
@@ -127,11 +126,7 @@ public class FileTransferServiceProcessor extends
 
 			// Find the name of the service that initiated this session
 			String serviceName;
-			synchronized (this.sessionInitiatedFileTransferServices) {
-
-				serviceName = this.sessionInitiatedFileTransferServices
-						.get(session.getId());
-			}
+			serviceName = this.sessionRoutes.get(session.getId());
 
 			// Sanity check
 			if (serviceName == null) {
@@ -151,6 +146,7 @@ public class FileTransferServiceProcessor extends
 
 				// Sanity check for the service
 				if (service == null) {
+					this.sessionRoutes.remove(session.getId());
 
 					LOGGER.warn(
 							"Failed to find a file transfer service with the name \"{}\", ignoring the destroy request...",
@@ -231,16 +227,12 @@ public class FileTransferServiceProcessor extends
 						// Convert the session object if successful
 						session = this.convertToThriftSession(serverSession);
 
-						// Set the file property of the session
-						session.setFile(file);
-
 						LOGGER.debug(
 								"Successfully initiated a file transfer session for file with hash '{}'.",
 								file.getHash());
 
 						// Add to the session initiated file transfer services
-						this.sessionInitiatedFileTransferServices.put(
-								session.getId(), serviceName);
+						this.sessionRoutes.put(session.getId(), serviceName);
 
 						// Break the loop
 						break;
@@ -274,6 +266,7 @@ public class FileTransferServiceProcessor extends
 			serverFile.setContentType(file.getContentType());
 			serverFile.setHash(file.getHash());
 			serverFile.setPath(file.getPath());
+			serverFile.setSize(file.getSize());
 			return serverFile;
 		}
 
@@ -298,6 +291,7 @@ public class FileTransferServiceProcessor extends
 				file.setContentType(serverFile.getContentType());
 			file.setHash(serverFile.getHash());
 			file.setPath(serverFile.getPath());
+			file.setSize(serverFile.getSize());
 			return file;
 		}
 
@@ -326,6 +320,7 @@ public class FileTransferServiceProcessor extends
 
 				this.fileTransferServices.remove(name);
 			}
+			this.sessionRoutes.removeService(name);
 		}
 	}
 }

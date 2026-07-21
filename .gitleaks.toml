@@ -1,0 +1,10 @@
+title = "livox secret scanning"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "CocoaPods dependency checksums are integrity metadata, not credentials."
+paths = ['''^livo-ios-client/Podfile\.lock$''']
+regexTarget = "match"
+regexes = ['''^SSKeychain: [0-9a-f]{40}$''']

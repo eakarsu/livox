@@ -1,3 +1,10 @@
-set JAVA_OPTS=-Duser.language=en -Duser.country=US -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.port=6667 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dfelix.fileinstall.dir=%AEON_HOME%\conf\services -Dfelix.cm.dir=%AEON_HOME%\conf\services -Dlivo.home=%AEON_HOME%
+@echo off
 
-java %JAVA_OPTS% -jar bin/felix.jar
+if "%AEON_HOME%"=="" (
+	echo AEON_HOME must point to the absolute Livo runtime directory.
+	exit /b 1
+)
+
+rem Remote JMX is intentionally disabled by default. Operators who need it
+rem must add authenticated, TLS-enabled settings through deployment tooling.
+java %JAVA_OPTS% -Duser.language=en -Duser.country=US -Dfelix.fileinstall.dir="%AEON_HOME%\conf\services" -Dfelix.cm.dir="%AEON_HOME%\conf\services" -Dlivo.home="%AEON_HOME%" -jar bin/felix.jar

@@ -34,7 +34,7 @@ public class NewsletterServlet extends HttpServlet {
 			.getLogger(NewsletterServlet.class);
 	// private static final MailChimpClient MAILCHIMP_CLIENT = new
 	// MailChimpClient();
-	private static final String MAILCHIMP_API_KEY = "8f1c5664b7b02ee0cc90f881a3dd2e70-us10";
+	private static final String MAILCHIMP_API_KEY_ENV = "LIVO_MAILCHIMP_API_KEY";
 	private static final String MAILCHIMP_LIST_ID = "b83f5af934";
 	private static final MessageFormat NEWSLETTER_INPUT_FORMAT = new MessageFormat(
 			"emailInputNewsletter={0}");
@@ -106,12 +106,19 @@ public class NewsletterServlet extends HttpServlet {
 	}
 
 	private boolean subscribeMailAddress(String emailAddress) {
+		String mailchimpApiKey = System.getenv(MAILCHIMP_API_KEY_ENV);
+		if (mailchimpApiKey == null || mailchimpApiKey.trim().isEmpty()) {
+			LOGGER.error("Newsletter subscription is disabled because {} is not configured.",
+					MAILCHIMP_API_KEY_ENV);
+			return false;
+		}
+		mailchimpApiKey = mailchimpApiKey.trim();
 
 		try {
 			
 			// Prepare the JSON request payload
 			JSONObject requestPayload = new JSONObject();
-			requestPayload.put("apikey", MAILCHIMP_API_KEY);
+			requestPayload.put("apikey", mailchimpApiKey);
 			requestPayload.put("id", MAILCHIMP_LIST_ID);
 			requestPayload.put("email", new JSONObject(Collections.singletonMap("email", emailAddress)));
 			requestPayload.put("double_optin", false);
@@ -162,7 +169,7 @@ public class NewsletterServlet extends HttpServlet {
 			
 			// Prepare the JSON request payload
 			JSONObject requestPayload = new JSONObject();
-			requestPayload.put("apikey", MAILCHIMP_API_KEY);
+			requestPayload.put("apikey", mailchimpApiKey);
 			requestPayload.put("id", MAILCHIMP_LIST_ID);
 			requestPayload.put("emails", new JSONArray(new JSONObject(Collections.singletonMap("email", emailAddress))));
 

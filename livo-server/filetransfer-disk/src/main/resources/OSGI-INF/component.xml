@@ -6,9 +6,10 @@
 	<implementation
 		class="tr.com.eno.livo.server.file.disk.DiskFileTransferService" />
 	<property name="service.pid" type="String">tr.com.eno.livo.server.file.disk.FileTransferService</property>
-	<property name="file.storage" type="String" value="D:\\" />
+	<property name="max.active.sessions" type="Long" value="256" />
+	<property name="max.bucket.bytes" type="Long" value="8388608" />
+	<property name="session.ttl.seconds" type="Long" value="300" />
 	<service>
 		<provide interface="tr.com.eno.livo.server.file.FileTransferService" />
 	</service>
 </scr:component>
-

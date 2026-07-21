@@ -4,363 +4,521 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import tr.com.eno.livo.server.file.File;
 import tr.com.eno.livo.server.file.FileTransferService;
 import tr.com.eno.livo.server.file.FileTransferSession;
 
+/**
+ * Disk-backed delivery of files from an immutable, content-addressed store.
+ *
+ * <p>The public SPI uses mutable transfer sessions. This implementation treats
+ * the session ID as the only client-controlled capability and keeps the file,
+ * bucket size, and cursor authoritative on the server. A caller may request the
+ * next bucket or replay the immediately preceding bucket for a safe retry.</p>
+ */
 public class DiskFileTransferService implements FileTransferService {
 
-	private final static String FILES_PATH = "files";
-	private final static Logger LOGGER = LoggerFactory
-			.getLogger(DiskFileTransferService.class);
-	private Map<String, FileChannel> fileChannels;
-	private java.io.File filesDirectory;
-	private Map<String, Long> fileSizes;
-	private Map<UUID, Long> sessionBucketSizes;
+	static final String CONFIG_AUDIT_FILE = "audit.file";
+	static final String CONFIG_FILES_DIRECTORY = "file.storage";
+	static final String CONFIG_MAX_ACTIVE_SESSIONS = "max.active.sessions";
+	static final String CONFIG_MAX_BUCKET_BYTES = "max.bucket.bytes";
+	static final String CONFIG_SESSION_TTL_SECONDS = "session.ttl.seconds";
 
-	private Map<UUID, FileTransferSession> sessions;
+	private static final String ENV_AUDIT_FILE = "LIVO_FILE_TRANSFER_AUDIT";
+	private static final String ENV_FILES_DIRECTORY = "LIVO_FILE_STORAGE";
+	private static final String ENV_MAX_ACTIVE_SESSIONS = "LIVO_FILE_TRANSFER_MAX_ACTIVE_SESSIONS";
+	private static final String ENV_MAX_BUCKET_BYTES = "LIVO_FILE_TRANSFER_MAX_BUCKET_BYTES";
+	private static final String ENV_SESSION_TTL_SECONDS = "LIVO_FILE_TRANSFER_SESSION_TTL_SECONDS";
+	private static final String FILES_PATH = "files";
+	private static final String AUDIT_PATH = "audit/file-transfer.log";
+	private static final long DEFAULT_MAX_ACTIVE_SESSIONS = 256L;
+	private static final long DEFAULT_MAX_BUCKET_BYTES = 8L * 1024L * 1024L;
+	private static final long DEFAULT_SESSION_TTL_SECONDS = 300L;
+	private static final Pattern CONTENT_HASH = Pattern.compile("(?i)([0-9a-f]{40}|[0-9a-f]{64})");
+	private static final Logger LOGGER = LoggerFactory.getLogger(DiskFileTransferService.class);
+
+	private final Object sessionLock = new Object();
+	private final Map<UUID, SessionState> sessions = new HashMap<UUID, SessionState>();
+
+	private java.io.File filesDirectory;
+	private FileTransferAuditLog auditLog;
+	private int maxActiveSessions;
+	private long maxBucketBytes;
+	private volatile boolean running;
+	private long sessionTtlMillis;
 
 	@Override
-	public void destroySession(FileTransferSession session) {
-
-		LOGGER.debug("Destroying the file transfer session with ID \"{}\"...",
-				session.getId());
-
-		// TODO Close the related file channel if this session was the only
-		// accessor
-
-		// Remove the session from the sessions map
-		synchronized (this.sessions) {
-
-			this.sessions.remove(session.getId());
+	public void destroySession(FileTransferSession requestedSession) {
+		ensureStarted();
+		if (requestedSession == null || requestedSession.getId() == null) {
+			throw new IllegalArgumentException("A transfer session ID is required.");
 		}
 
-		// Remove the bucket size from the map
-		synchronized (this.sessionBucketSizes) {
+		SessionState state;
+		synchronized (sessionLock) {
+			state = sessions.remove(requestedSession.getId());
+		}
+		if (state == null) {
+			return;
+		}
 
-			this.sessionBucketSizes.remove(session.getId());
+		RuntimeException auditFailure = null;
+		synchronized (state) {
+			try {
+				auditLog.append("SESSION_DESTROYED", state.session.getId(),
+						state.session.getFile().getHash(), state.nextIndex);
+			} catch (RuntimeException e) {
+				auditFailure = e;
+			} finally {
+				closeQuietly(state.channel);
+			}
+		}
+		if (auditFailure != null) {
+			throw auditFailure;
 		}
 	}
 
 	@Override
-	public ByteBuffer fetchBucket(FileTransferSession session) {
+	public ByteBuffer fetchBucket(FileTransferSession requestedSession) {
+		ensureStarted();
+		if (requestedSession == null || requestedSession.getId() == null) {
+			throw new IllegalArgumentException("A transfer session ID is required.");
+		}
+		if (requestedSession.getCurrentIndex() < 0L) {
+			throw new IllegalArgumentException("Bucket index cannot be negative.");
+		}
 
-		// Sanity check for session
-		synchronized (this.sessions) {
+		removeExpiredSessions();
+		SessionState state;
+		synchronized (sessionLock) {
+			state = sessions.get(requestedSession.getId());
+		}
+		if (state == null) {
+			throw new IllegalStateException("Transfer session is unknown or expired.");
+		}
 
-			if (!this.sessions.containsKey(session.getId())) {
+		synchronized (state) {
+			long now = System.currentTimeMillis();
+			if (state.expiresAtMillis <= now) {
+				expireSession(state);
+				throw new IllegalStateException("Transfer session has expired.");
+			}
 
-				LOGGER.debug(
-						"Session \"{}\" is not valid, please recreate one.",
-						session.getId());
-				throw new RuntimeException();
+			long requestedIndex = requestedSession.getCurrentIndex();
+			if (requestedIndex == state.lastIndex && state.lastIndex >= 0L) {
+				ensureStoredFileUnchanged(state);
+				byte[] replayedBucket = readBucket(state, requestedIndex);
+				auditLog.append("BUCKET_REPLAYED", state.session.getId(),
+						state.session.getFile().getHash(), requestedIndex);
+				state.expiresAtMillis = safeAdd(System.currentTimeMillis(), sessionTtlMillis);
+				return bufferAtEnd(replayedBucket);
+			}
+			if (requestedIndex != state.nextIndex) {
+				throw new IllegalStateException("Expected bucket " + state.nextIndex
+						+ " but received " + requestedIndex + ".");
+			}
+			if (requestedIndex >= state.session.getBucketCount()) {
+				throw new IllegalStateException("All buckets have already been delivered.");
+			}
+
+			ensureStoredFileUnchanged(state);
+			byte[] bucket = readBucket(state, requestedIndex);
+			boolean completesTransfer = requestedIndex + 1L == state.session.getBucketCount();
+			auditLog.append(completesTransfer ? "TRANSFER_COMPLETED" : "BUCKET_SERVED",
+					state.session.getId(),
+					state.session.getFile().getHash(), requestedIndex);
+			state.lastIndex = requestedIndex;
+			state.nextIndex++;
+			state.expiresAtMillis = safeAdd(System.currentTimeMillis(), sessionTtlMillis);
+
+			return bufferAtEnd(bucket);
+		}
+	}
+
+	@Override
+	public synchronized FileTransferSession initiateSession(File requested, long bucketSize) {
+		ensureStarted();
+		removeExpiredSessions();
+		if (requested == null || requested.getHash() == null
+				|| !CONTENT_HASH.matcher(requested.getHash()).matches()) {
+			throw new IllegalArgumentException("File hash must be a 40-character SHA-1 or 64-character SHA-256 value.");
+		}
+		if (bucketSize <= 0L || bucketSize > maxBucketBytes
+				|| bucketSize > Integer.MAX_VALUE) {
+			throw new IllegalArgumentException("Bucket size must be between 1 and "
+					+ maxBucketBytes + " bytes.");
+		}
+		synchronized (sessionLock) {
+			if (sessions.size() >= maxActiveSessions) {
+				throw new IllegalStateException("The active file-transfer session limit has been reached.");
 			}
 		}
 
-		// Find the corresponding channel
-		FileChannel channel;
-		synchronized (this.fileChannels) {
-
-			if (!this.fileChannels.containsKey(session.getFile().getHash())) {
-
-				LOGGER.debug(
-						"File channel for the file with SHA1 hash of \"{}\" could not be found!",
-						session.getFile().getHash());
-
-			}
-
-			channel = this.fileChannels.get(session.getFile().getHash());
+		String normalizedHash = requested.getHash().toLowerCase(Locale.US);
+		Path root = filesDirectory.toPath();
+		Path storedPath = root.resolve(normalizedHash).normalize();
+		if (!storedPath.getParent().equals(root)
+				|| Files.isSymbolicLink(storedPath)
+				|| !Files.isRegularFile(storedPath, LinkOption.NOFOLLOW_LINKS)) {
+			throw new RuntimeException(new FileNotFoundException("Content-addressed file is unavailable."));
 		}
 
-		// Create a byte buffer with the correct size for result
-		ByteBuffer buffer = null;
-		Long size;
-		synchronized (this.sessionBucketSizes) {
-
-			size = this.sessionBucketSizes.get(session.getId());
-
-			LOGGER.trace("Bucket size for the session \"{}\" is {}.",
-					session.getId(), size);
-
-			if (size > Integer.MAX_VALUE) {
-
-				LOGGER.error(
-						"Bucket size of {} bytes for session {} is larger than the maximum size of {}!",
-						size, session.getId(), Integer.MAX_VALUE);
-			} else {
-
-				buffer = ByteBuffer.allocate(size.intValue());
-			}
-		}
-
-		// Sanity check for buffer
-		if (buffer == null) {
-
-			LOGGER.error("Failed to allocate a buffer of size {} bytes!", size);
-
-			throw new RuntimeException("Failed to allocate a buffer of size "
-					+ size.toString() + " bytes!");
-		}
-
-		// Read the corresponding part of the file channel into the byte buffer
+		FileChannel channel = null;
 		try {
+			channel = FileChannel.open(storedPath, StandardOpenOption.READ,
+					LinkOption.NOFOLLOW_LINKS);
+			long sizeBefore = channel.size();
+			long modifiedBefore = Files.getLastModifiedTime(storedPath,
+					LinkOption.NOFOLLOW_LINKS).toMillis();
+			String actualHash = digest(channel, normalizedHash.length() == 40 ? "SHA-1" : "SHA-256");
+			long sizeAfter = channel.size();
+			long modifiedAfter = Files.getLastModifiedTime(storedPath,
+					LinkOption.NOFOLLOW_LINKS).toMillis();
+			if (sizeBefore != sizeAfter || modifiedBefore != modifiedAfter
+					|| !normalizedHash.equals(actualHash)) {
+				throw new SecurityException("Stored content does not match its content-addressed filename.");
+			}
 
-			channel.position(session.getCurrentIndex() * size);
+			File authoritativeFile = copyFile(requested);
+			authoritativeFile.setHash(normalizedHash);
+			authoritativeFile.setSize(sizeAfter);
+			FileTransferSession authoritativeSession = new FileTransferSession();
+			authoritativeSession.setId(nextSessionId());
+			authoritativeSession.setFile(authoritativeFile);
+			authoritativeSession.setBucketCount(bucketCount(sizeAfter, bucketSize));
+			authoritativeSession.setCurrentIndex(0L);
 
-			int readResult = channel.read(buffer);
-
-			if (readResult == -1 || readResult == 0)
-				LOGGER.trace(
-						"Session with the ID \"{}\" has finished fetching the file with the SHA1 hash of \"{}\".",
-						session.getId(), session.getFile().getHash());
-
+			SessionState state = new SessionState(authoritativeSession, channel,
+					bucketSize, sizeAfter, modifiedAfter,
+					safeAdd(System.currentTimeMillis(), sessionTtlMillis), storedPath);
+			auditLog.append("SESSION_STARTED", authoritativeSession.getId(),
+					normalizedHash, -1L);
+			synchronized (sessionLock) {
+				sessions.put(authoritativeSession.getId(), state);
+			}
+			channel = null;
+			return copySession(authoritativeSession);
 		} catch (IOException e) {
+			throw new RuntimeException("Unable to open content-addressed file.", e);
+		} finally {
+			closeQuietly(channel);
+		}
+	}
 
-			LOGGER.warn(
-					"Failed to read the channel for file with SHA1 hash of \"{}\" into the buffer of size {}!",
-					session.getFile().getHash(), size);
-
-			throw new RuntimeException(e);
+	protected synchronized void start(Map<String, Object> config) {
+		LOGGER.info("Starting disk-backed file transfer service...");
+		if (running) {
+			throw new IllegalStateException("Disk file transfer service is already running.");
 		}
 
-		// Return the buffer
+		String homePath = trimToNull(System.getenv("AEON_HOME"));
+		String configuredFiles = setting(config, CONFIG_FILES_DIRECTORY,
+				ENV_FILES_DIRECTORY, homePath == null ? null
+						: new java.io.File(homePath, FILES_PATH).getPath());
+		String configuredAudit = setting(config, CONFIG_AUDIT_FILE,
+				ENV_AUDIT_FILE, homePath == null ? null
+						: new java.io.File(homePath, AUDIT_PATH).getPath());
+		if (configuredFiles == null || configuredAudit == null) {
+			throw new IllegalStateException("Set AEON_HOME or configure both file.storage and audit.file.");
+		}
+
+		maxBucketBytes = positiveSetting(config, CONFIG_MAX_BUCKET_BYTES,
+				ENV_MAX_BUCKET_BYTES, DEFAULT_MAX_BUCKET_BYTES);
+		long configuredMaxSessions = positiveSetting(config,
+				CONFIG_MAX_ACTIVE_SESSIONS, ENV_MAX_ACTIVE_SESSIONS,
+				DEFAULT_MAX_ACTIVE_SESSIONS);
+		if (configuredMaxSessions > Integer.MAX_VALUE) {
+			throw new IllegalArgumentException("Active session limit is too large.");
+		}
+		maxActiveSessions = (int) configuredMaxSessions;
+		long ttlSeconds = positiveSetting(config, CONFIG_SESSION_TTL_SECONDS,
+				ENV_SESSION_TTL_SECONDS, DEFAULT_SESSION_TTL_SECONDS);
+		if (ttlSeconds > Long.MAX_VALUE / 1000L) {
+			throw new IllegalArgumentException("Session TTL is too large.");
+		}
+		sessionTtlMillis = ttlSeconds * 1000L;
+
+		try {
+			Path configuredRoot = new java.io.File(configuredFiles).toPath().toAbsolutePath();
+			if (Files.exists(configuredRoot, LinkOption.NOFOLLOW_LINKS)
+					&& Files.isSymbolicLink(configuredRoot)) {
+				throw new SecurityException("The content store may not be a symbolic link.");
+			}
+			Files.createDirectories(configuredRoot);
+			if (!Files.isDirectory(configuredRoot, LinkOption.NOFOLLOW_LINKS)) {
+				throw new IllegalStateException("Configured content store is not a directory.");
+			}
+			filesDirectory = configuredRoot.toFile().getCanonicalFile();
+			auditLog = new FileTransferAuditLog(new java.io.File(configuredAudit).toPath());
+			auditLog.verify();
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to initialize disk file transfer storage.", e);
+		}
+		running = true;
+		LOGGER.info("Disk-backed file transfer service started with a {} session limit, {} byte bucket limit, and {} second idle TTL.",
+				maxActiveSessions, maxBucketBytes, ttlSeconds);
+	}
+
+	protected synchronized void reconfigure(Map<String, Object> config) {
+		stop();
+		start(config);
+	}
+
+	protected synchronized void stop() {
+		LOGGER.info("Stopping the disk-backed file transfer service...");
+		running = false;
+		List<SessionState> openSessions;
+		synchronized (sessionLock) {
+			openSessions = new ArrayList<SessionState>(sessions.values());
+			sessions.clear();
+		}
+		for (SessionState state : openSessions) {
+			synchronized (state) {
+				closeQuietly(state.channel);
+			}
+		}
+		LOGGER.info("Disk-backed file transfer service stopped.");
+	}
+
+	private long bucketCount(long fileSize, long bucketSize) {
+		if (fileSize == 0L) {
+			return 1L;
+		}
+		return fileSize / bucketSize + (fileSize % bucketSize == 0L ? 0L : 1L);
+	}
+
+	private ByteBuffer bufferAtEnd(byte[] bytes) {
+		ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+		buffer.put(bytes);
 		return buffer;
 	}
 
-	@Override
-	public FileTransferSession initiateSession(File file, long bucketSize) {
-
-		// Check whether this service can provide the requested file
-		java.io.File requestedFile = new java.io.File(this.filesDirectory,
-				file.getHash());
-		if (!requestedFile.exists()) {
-
-			LOGGER.debug(
-					"Requested file with SHA1 hash of '{}' cannot be found at '{}' by the disk-backed file transfer service.",
-					file.getHash(), requestedFile.getAbsolutePath());
-			throw new RuntimeException(new FileNotFoundException());
+	private void closeQuietly(FileChannel channel) {
+		if (channel == null) {
+			return;
 		}
-
-		// Create a new session
-		FileTransferSession session = new FileTransferSession();
-		session.setFile(file);
-
-		synchronized (this.sessions) {
-
-			// Assign a unique session UUID to the new session
-			UUID id = UUID.randomUUID();
-			while (this.sessions.containsKey(id))
-				id = UUID.randomUUID();
-
-			// Set the ID field in session
-			session.setId(id);
-		}
-
-		// Set the bucket size
-		synchronized (this.sessionBucketSizes) {
-
-			this.sessionBucketSizes.put(session.getId(), bucketSize);
-		}
-
-		// Set the bucket count for the session
-		setBucketCount(session, file, bucketSize);
-
-		// Add the session to the sessions map
-		synchronized (this.sessions) {
-
-			this.sessions.put(session.getId(), session);
-		}
-
-		// Return the session object
-		return session;
-	}
-
-	protected void start(Map<String, Object> config) {
-
-		LOGGER.info("Starting disk-backed file transfer service...");
-
-		// Initialize the session map
-		this.sessions = new HashMap<UUID, FileTransferSession>();
-
-		// Initialize the session bucket size map
-		this.sessionBucketSizes = new HashMap<UUID, Long>();
-
-		// Initialize the session file size map
-		this.fileSizes = new HashMap<String, Long>();
-
-		// Initialize the session file channels
-		this.fileChannels = new HashMap<String, FileChannel>();
-
-		// Get the AEON home environment variable
-		String homePath = System.getenv("AEON_HOME");
-
-		// Sanity check for AEON home path
-		if (homePath == null) {
-
-			LOGGER.error("\"AEON_HOME\" environment variable is not set, preventing the DiskFileTransferService from starting.");
-
-			throw new RuntimeException(
-					"Please set the \"AEON_HOME\" environment variable before launching AEON server.");
-		}
-
-		// Calculate the absolute file path to the files directory
-		this.filesDirectory = new java.io.File(homePath, FILES_PATH);
-
-		// Create the directory if needed
-		if (!this.filesDirectory.exists()) {
-
-			LOGGER.info("AEON files directory does not exist.");
-
-			if (this.filesDirectory.mkdirs()) {
-
-				LOGGER.info("AEON files directory is successfully created.");
-
-			} else {
-
-				LOGGER.info("AEON files directory could not be created.");
-
-				throw new RuntimeException(
-						"AEON files directory could not be created at path \""
-								+ this.filesDirectory.getAbsolutePath()
-								+ "\", please check the write permissons or create it manually.");
-			}
+		try {
+			channel.close();
+		} catch (IOException e) {
+			LOGGER.warn("Unable to close a file-transfer channel.", e);
 		}
 	}
 
-	protected void stop() {
+	private File copyFile(File source) {
+		File copy = new File();
+		copy.setContentType(source.getContentType());
+		copy.setHash(source.getHash());
+		copy.setPath(source.getPath());
+		copy.setSize(source.getSize());
+		return copy;
+	}
 
-		LOGGER.info("Stopping the disk-backed file transfer service...");
+	private FileTransferSession copySession(FileTransferSession source) {
+		FileTransferSession copy = new FileTransferSession();
+		copy.setId(source.getId());
+		copy.setFile(copyFile(source.getFile()));
+		copy.setBucketCount(source.getBucketCount());
+		copy.setCurrentIndex(source.getCurrentIndex());
+		return copy;
+	}
 
-		// Remove the sessions one by one
-		synchronized (this.sessions) {
-
-			for (UUID sessionId : this.sessions.keySet()) {
-
-				LOGGER.trace(
-						"Removing file transfer session with ID \"{}\"...",
-						sessionId);
-
-				this.sessions.remove(sessionId);
-			}
-		}
-
-		// Clear the bucket size map
-		synchronized (this.sessionBucketSizes) {
-
-			this.sessionBucketSizes.clear();
-		}
-
-		// Close the file channels one by one
-		synchronized (this.fileChannels) {
-
-			for (String hash : this.fileChannels.keySet()) {
-
-				LOGGER.trace(
-						"Closing the file channel for the file with SHA1 hash of \"{}\"...",
-						hash);
-
-				try {
-
-					this.fileChannels.get(hash).close();
-
-				} catch (IOException e) {
-
-					LOGGER.warn(
-							"Failed to close the file channel for the file with SHA1 hash of \"{}\"!",
-							hash);
+	private String digest(FileChannel channel, String algorithm) throws IOException {
+		try {
+			MessageDigest digest = MessageDigest.getInstance(algorithm);
+			ByteBuffer buffer = ByteBuffer.allocate(64 * 1024);
+			long position = 0L;
+			while (true) {
+				buffer.clear();
+				int read = channel.read(buffer, position);
+				if (read < 0) {
+					break;
 				}
+				if (read == 0) {
+					continue;
+				}
+				position += read;
+				digest.update(buffer.array(), 0, read);
 			}
+			return toHex(digest.digest());
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalStateException("Required content digest is unavailable.", e);
 		}
-
-		LOGGER.info("Successfully stopped the disk-backed file transfer service.");
 	}
 
-	private void setBucketCount(FileTransferSession session, File file,
-			long bucketSize) {
-
-		// Check if we stored the file size before
-		synchronized (this.fileSizes) {
-
-			if (this.fileSizes.containsKey(file.getHash())) {
-
-				long fileSize = this.fileSizes.get(file.getHash());
-
-				session.setBucketCount((fileSize - (fileSize % bucketSize))
-						/ bucketSize + 1);
-				return;
-			}
+	private void ensureStarted() {
+		if (!running) {
+			throw new IllegalStateException("Disk file transfer service is not running.");
 		}
+	}
 
-		// Get the absolute file path
-		java.io.File requestedFile = new java.io.File(this.filesDirectory,
-				file.getHash());
-
-		// Sanity check for file
-		if (!requestedFile.exists()) {
-
-			LOGGER.error(
-					"Requested a non existing file with hash value \"{}\" and absolute path \"{}\".",
-					file.getHash(), requestedFile.getAbsolutePath());
-
-			throw new RuntimeException("Requested file does no exist!");
-		}
-
-		// Check whether we have an open file channel for the requested file
-		synchronized (this.fileChannels) {
-
-			FileChannel channel = null;
-
-			if (this.fileChannels.containsKey(file.getHash())) {
-
-				channel = this.fileChannels.get(file.getHash());
-
-			} else {
-
-				// Open a channel for the file
-				try {
-					channel = FileChannel.open(
-							FileSystems.getDefault().getPath(
-									this.filesDirectory.getAbsolutePath(),
-									file.getHash()), StandardOpenOption.READ);
-
-					this.fileChannels.put(file.getHash(), channel);
-				} catch (IOException e) {
-
-					/*
-					 * if (channel != null && channel.isOpen()) {
-					 * 
-					 * LOGGER.debug(
-					 * "Trying to close an incorrectly opened channel for the file with SHA1 hash of '{}'... I guess!"
-					 * ); }
-					 */
-
-					LOGGER.error(e.getMessage(), e);
-				}
+	private void ensureStoredFileUnchanged(SessionState state) {
+		try {
+			if (Files.isSymbolicLink(state.path)
+					|| !Files.isRegularFile(state.path, LinkOption.NOFOLLOW_LINKS)
+					|| state.channel.size() != state.fileSize
+					|| Files.getLastModifiedTime(state.path,
+							LinkOption.NOFOLLOW_LINKS).toMillis() != state.lastModifiedMillis) {
+				throw new SecurityException("Content-addressed file changed during transfer.");
 			}
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to validate content-addressed file.", e);
+		}
+	}
 
-			long size;
+	private void expireSession(SessionState state) {
+		boolean removed;
+		synchronized (sessionLock) {
+			removed = sessions.remove(state.session.getId()) != null;
+		}
+		if (removed) {
 			try {
-
-				size = channel.size();
-
-			} catch (Exception e) {
-
-				LOGGER.error(
-						"Failed to get the size of the file \"{}\" via it's file channel.",
-						requestedFile.getAbsolutePath());
-
-				throw new RuntimeException(e);
+				auditLog.append("SESSION_EXPIRED", state.session.getId(),
+						state.session.getFile().getHash(), state.nextIndex);
+			} finally {
+				closeQuietly(state.channel);
 			}
+		}
+	}
 
-			session.setBucketCount((size - (size % bucketSize)) / bucketSize
-					+ 1);
+	private UUID nextSessionId() {
+		UUID id = UUID.randomUUID();
+		synchronized (sessionLock) {
+			while (sessions.containsKey(id)) {
+				id = UUID.randomUUID();
+			}
+		}
+		return id;
+	}
+
+	private long positiveSetting(Map<String, Object> config, String configKey,
+			String environmentKey, long defaultValue) {
+		String value = setting(config, configKey, environmentKey,
+				Long.toString(defaultValue));
+		try {
+			long parsed = Long.parseLong(value);
+			if (parsed <= 0L) {
+				throw new NumberFormatException("not positive");
+			}
+			return parsed;
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(configKey + " must be a positive integer.", e);
+		}
+	}
+
+	private byte[] readBucket(SessionState state, long index) {
+		if (index != 0L && state.bucketSize > Long.MAX_VALUE / index) {
+			throw new IllegalStateException("Bucket offset overflow.");
+		}
+		long offset = index * state.bucketSize;
+		int expected = (int) Math.min(state.bucketSize, state.fileSize - offset);
+		ByteBuffer target = ByteBuffer.allocate(expected);
+		long position = offset;
+		try {
+			while (target.hasRemaining()) {
+				int read = state.channel.read(target, position);
+				if (read < 0) {
+					throw new IOException("Unexpected end of content-addressed file.");
+				}
+				if (read == 0) {
+					continue;
+				}
+				position += read;
+			}
+			return target.array();
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to read requested file bucket.", e);
+		}
+	}
+
+	private void removeExpiredSessions() {
+		long now = System.currentTimeMillis();
+		List<SessionState> expired = new ArrayList<SessionState>();
+		synchronized (sessionLock) {
+			for (SessionState state : sessions.values()) {
+				if (state.expiresAtMillis <= now) {
+					expired.add(state);
+				}
+			}
+		}
+		for (SessionState state : expired) {
+			synchronized (state) {
+				if (state.expiresAtMillis <= System.currentTimeMillis()) {
+					expireSession(state);
+				}
+			}
+		}
+	}
+
+	private long safeAdd(long left, long right) {
+		return left > Long.MAX_VALUE - right ? Long.MAX_VALUE : left + right;
+	}
+
+	private String setting(Map<String, Object> config, String configKey,
+			String environmentKey, String defaultValue) {
+		if (config != null && config.get(configKey) != null) {
+			String configured = trimToNull(String.valueOf(config.get(configKey)));
+			if (configured != null) {
+				return configured;
+			}
+		}
+		String environment = trimToNull(System.getenv(environmentKey));
+		return environment == null ? defaultValue : environment;
+	}
+
+	private String toHex(byte[] bytes) {
+		StringBuilder result = new StringBuilder(bytes.length * 2);
+		for (byte value : bytes) {
+			result.append(String.format(Locale.US, "%02x", value & 0xff));
+		}
+		return result.toString();
+	}
+
+	private String trimToNull(String value) {
+		if (value == null) {
+			return null;
+		}
+		String trimmed = value.trim();
+		return trimmed.length() == 0 ? null : trimmed;
+	}
+
+	private static final class SessionState {
+		private final FileChannel channel;
+		private volatile long expiresAtMillis;
+		private final long fileSize;
+		private final long lastModifiedMillis;
+		private final long bucketSize;
+		private long lastIndex = -1L;
+		private long nextIndex = 0L;
+		private final Path path;
+		private final FileTransferSession session;
+
+		private SessionState(FileTransferSession session, FileChannel channel,
+				long bucketSize, long fileSize, long lastModifiedMillis,
+				long expiresAtMillis, Path path) {
+			this.session = session;
+			this.channel = channel;
+			this.bucketSize = bucketSize;
+			this.fileSize = fileSize;
+			this.lastModifiedMillis = lastModifiedMillis;
+			this.expiresAtMillis = expiresAtMillis;
+			this.path = path;
 		}
 	}
 }

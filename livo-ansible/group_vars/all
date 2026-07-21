@@ -1,2 +1,5 @@
-admin_user="admin"
-admin_password="$6$Um9FR.4RAV31IEvM$Pu0FDsVatNNBNebNndANBA2Y9.K30eSazelvGUpE2/JWiX4mqq7IMVnRFpspadCVpyiCPnvQIQGb2bEoJDZID0"
+---
+admin_user: "admin"
+# Define this value in an encrypted Ansible Vault file that is supplied at
+# deployment time. The playbook must fail rather than create a shared default.
+admin_password: "{{ vault_admin_password_hash }}"
