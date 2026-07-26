@@ -36,6 +36,12 @@ const server = http.createServer(async (req, res) => {
       query('SELECT 1');
       return json(res, 200, { status: 'ready', service: 'livox-runtime' });
     }
+    if (req.method === 'GET' && url.pathname === '/api/auth/demo-credentials') {
+      if (process.env.NODE_ENV === 'production') return json(res, 404, { error: 'Not found' });
+      const email = process.env.PROVISION_ADMIN_EMAIL || process.env.ADMIN_EMAIL || '';
+      const password = process.env.PROVISION_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || '';
+      return email && password ? json(res, 200, { email, password }) : json(res, 503, { error: 'Demo credentials unavailable' });
+    }
     if (req.method === 'POST' && url.pathname === '/api/auth/login') {
       const input = await body(req);
       const email = String(input.email || input.username || '').trim().toLowerCase();
